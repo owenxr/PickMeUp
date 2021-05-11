@@ -2,5 +2,4 @@
 Hosting
 /src/venv
 /src/__pycache__
-/src/.DS_Store
-.DS_Store
+.vscode

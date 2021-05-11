@@ -4,7 +4,7 @@ from configparser import ConfigParser
 import json
 import sqlalchemy
 import os
-import requests
+import dao
 import threading
 import time
 
@@ -26,11 +26,16 @@ configParser.read(os.environ.get("APP_HOME") + '/vars.config')
 
 #Load Connect And Login Values
 
-db_user = configParser.get("Vars", 'user')
-db_pass = configParser.get("Vars", 'pass')
-db_name = configParser.get("Vars", 'name')
-db_host = configParser.get("Vars", 'host')
-db_port = configParser.getint("Vars", 'port')
+db_user = configParser.get("DBVARS", 'user')
+db_pass = configParser.get("DBVARS", 'pass')
+db_name = configParser.get("DBVARS", 'name')
+db_host = configParser.get("DBVARS", 'host')
+db_port = configParser.getint("DBVARS", 'port')
+
+#API Variables
+pexels_key = configParser.get("APIKEY", 'pexels_key')
+quotes_key = configParser.get("APIKEY", 'quotes_key')
+quotes_host = configParser.get("APIKEY", 'quotes_host')
 
 #Initiate Connection
 
@@ -74,32 +79,37 @@ def init_category(name):
             db.session.add(new_category)
             db.session.commit()
 
+def init_data(dat, ind):
+    with app.app_context():
+        c = Category().query.filter(Category.name==dat.get('category')).first().id
+        new_data = Data(category=c, 
+            photo=dat.get('photo'), 
+            photographer=dat.get('photographer'))
+
+        if Data.query.filter_by(id=ind).first() is None:
+            db.session.add(new_data)
+        else:
+            row = Data.query.filter_by(id=ind).first()
+            row.category=c, 
+            row.photo=dat.get('photo'), 
+            row.photographer=dat.get('photographer')
+        
+        db.session.commit()
+
 categories = ["pets","food","outdoors","sports","fashion"]
 
 for i in categories:
     init_category(name=i)
 
-def create_data(data,type,category):
-    cat = Category().query.filter(Category.name==category).first()
-    new_data=Data(data=str(data),type=str(type),category=str(cat)) 
-    db.session.add(new_data)   
-    db.session.commit()
-
-def get_data(category):
-    url = "https://yusufnb-quotes-v1.p.rapidapi.com/widget/~"+category+".json"
-    headers = {
-        'x-rapidapi-key': "5e121c3ffbmshfe664e6eb4853f2p13e07cjsnccf0b47fe4fc",
-        'x-rapidapi-host': "yusufnb-quotes-v1.p.rapidapi.com"
-    }
-    response = requests.request("GET", url, headers=headers)
-    body = json.loads(response.text)
-    pic = body.get("pic")
-    quote = body.get("quote")
-    create_data(quote,"quote",category)
-    create_data(pic,"image",category)
+data = dao.retrive_data(categories, pexels_key)
+j = 1
+for dat in data:
+   init_data(dat, j)
+   j = j + 1
 
 def extract_token(request):
-    auth_header = request.headers.get("Authorization")
+    body = json.loads(request.data)
+    auth_header = body.get('authorization')
     if auth_header is None:
         return False, None, failure_response("Missing auth header")
     bearer_token = auth_header.replace("Bearer ","").strip()
@@ -158,7 +168,7 @@ def login():
     user = User.query.filter(User.email==email).first()
     success = user is not None and user.verify_password(password)
     if not success:
-        return failure_response("Wrong email or password")
+        return failure_response("No email or password")
     return success_response(user.session(), 201)
 
 @app.route("/api/update_session/", methods=["POST"])
@@ -169,7 +179,7 @@ def update_session():
     user = User.query.filter(User.update_token==update_token).first()
     if user is None:
         return failure_response("Invalid update token")
-    user.renew_session
+    user.renew_session()
     db.session.commit()
     return success_response(user.session(), 201)
     
@@ -179,48 +189,37 @@ def update_session():
 def get_categories():
     return success_response([c.serialize() for c in Category.query.all()])
 
-@app.route("/api/data/", methods=["GET"])
-def get_specific_data():
+#Yet to Be Implemented
+@app.route("/api/data/", methods=["POST"])
+def get_data_by_category():
     verify, error = verify_session(request)
+    print(verify)
     if not verify:
         return error
 
     body = json.loads(request.data)
-    category = body.get("category")
-    type = body.get("type")
+    cat = body.get("category")
+    category = Category.query.filter_by(name=cat).first()
     if category is None:
         return failure_response("No category")
-    if type is None:
-        return failure_response("Type of data not specified")
-    if not (type=="quote" or type=="image"):
-        return failure_response("Invalid type")
-    if not (category in categories):
-        return failure_response("Invalid category")
-
-    category_data = Category().query.filter(Category.name==str(category)).first()
-
-    return success_response([x.serialize() for x in Data.query.filter_by(category=str(category_data),type=type)])
+    #####
+    return success_response([x.serialize() for x in Data.query.filter_by(category=category.id)])
 
 
-@app.route("/api/data/<int:user_id>/", methods=["GET"])
+#Yet To Be Implemented
+@app.route("/api/data/<int:user_id>/", methods=["POST"])
 def get_data_for_user(user_id):
     verify, error = verify_session(request)
     if not verify:
         return error
 
-    body = json.loads(request.data)
-    type = body.get("type")
     user = User.query.filter_by(id=user_id).first()
     if user is None:
         return failure_response("No user")
-    if type is None:
-        return failure_response("Type of data not specified")
-    if not (type=="quote" or type=="image"):
-        return failure_response("Invalid type")
     categories = user.categories
     data=[]
     for i in categories:
-        data+=[x.serialize() for x in Data.query.filter_by(category=str(i),type=type)]
+        data+=[x.serialize() for x in Data.query.filter_by(category=i.id)]
     return success_response(data)
 
 
@@ -240,7 +239,7 @@ def assign_category(user_id):
         return failure_response("No category name")
     category = Category().query.filter(Category.name==name).first()
     if category is None:
-        return failure_response("Invalid category")
+        return failure_response("Invalid category", 400)
     user.categories.append(category)
     db.session.commit()
     return success_response(user.serialize())
@@ -262,28 +261,38 @@ def remove_category(user_id):
     category = Category().query.filter(Category.name==name).first()
     if category not in user.categories:
         return failure_response("User does not have this category")
+    
     user.categories.remove(category)
     db.session.commit()
     return success_response(user.serialize())
 
+@app.route("/api/quote/", methods=["POST"])
+def get_quote():
+    verify, error = verify_session(request)
+
+    if not verify:
+        return error
+
+    body = json.loads(request.data)
+    category = body.get('category')
+
+    if category is None:
+        return failure_response("No Category Specified", 400)
+
+    quote = dao.get_quote(category, quotes_key, quotes_host)
+    return success_response(quote)
 
 def load_data():
     while True:
-        for j in categories:
-            with app.app_context():
-                category = Category().query.filter(Category.name==j).first()
-                db.session.delete(category)
-                db.session.commit()
-                init_category(j)
-                for i in range(5):
-                    get_data(j)
-        time.sleep(60)
+        time.sleep(3600)
+        dat = dao.retrive_data(categories, pexels_key)
+        j = 1
+        for dat in data:
+           init_data(dat, j)
+           j = j + 1
 
 if __name__ == "__main__":
-    thread = threading.Thread(target=load_data,daemon=True)
+    thread = threading.Thread(target=load_data, daemon=True)
     thread.start()
-    app.run(host='0.0.0.0', port=8080, debug=True)
-    
 
-
-
+    app.run(host='127.0.0.1', port=8080)
