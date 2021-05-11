@@ -335,13 +335,37 @@ Response
 ```
 
 ### Get Themed Quote
-`POST` `/api/quote/`
+`GET` `/api/quote/`
 ```json
 Request 
 
 { 
     "authorization": "<STRING: SESSION TOKEN>",
     "category": "<STRING: USER INPUT>"
+}
+```
+
+```json
+Response
+
+{
+  "success": true, 
+  "data": 
+        {
+          "category": "<STRING: QUOTE THEME>",
+          "quote": "<STRING: QUOTE>",
+          "author": "<STRING: AUTHOR>"
+        }
+}
+```
+
+### Get Random Quote for User
+`GET` `/api/<int:user_id>/quote/`
+```json
+Request 
+
+{ 
+    "authorization": "<STRING: SESSION TOKEN>"
 }
 ```
 
