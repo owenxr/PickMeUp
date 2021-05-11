@@ -4,6 +4,9 @@ from configparser import ConfigParser
 import json
 import sqlalchemy
 import os
+import requests
+import threading
+import time
 
 app = Flask(__name__)
 
@@ -71,14 +74,29 @@ def init_category(name):
             db.session.add(new_category)
             db.session.commit()
 
-for i in ["pets","food","outdoors","sports","fashion"]:
+categories = ["pets","food","outdoors","sports","fashion"]
+
+for i in categories:
     init_category(name=i)
 
-def create_data(category,data,relaxing):
-    cat = Category.query.filter_by(name=category).first()
-    new_data=Data(data=data,relaxing=relaxing,category=cat) 
+def create_data(data,type,category):
+    cat = Category().query.filter(Category.name==category).first()
+    new_data=Data(data=str(data),type=str(type),category=str(cat)) 
     db.session.add(new_data)   
     db.session.commit()
+
+def get_data(category):
+    url = "https://yusufnb-quotes-v1.p.rapidapi.com/widget/~"+category+".json"
+    headers = {
+        'x-rapidapi-key': "5e121c3ffbmshfe664e6eb4853f2p13e07cjsnccf0b47fe4fc",
+        'x-rapidapi-host': "yusufnb-quotes-v1.p.rapidapi.com"
+    }
+    response = requests.request("GET", url, headers=headers)
+    body = json.loads(response.text)
+    pic = body.get("pic")
+    quote = body.get("quote")
+    create_data(quote,"quote",category)
+    create_data(pic,"image",category)
 
 def extract_token(request):
     auth_header = request.headers.get("Authorization")
@@ -140,7 +158,7 @@ def login():
     user = User.query.filter(User.email==email).first()
     success = user is not None and user.verify_password(password)
     if not success:
-        return failure_response("No email or password")
+        return failure_response("Wrong email or password")
     return success_response(user.session(), 201)
 
 @app.route("/api/update_session/", methods=["POST"])
@@ -161,26 +179,29 @@ def update_session():
 def get_categories():
     return success_response([c.serialize() for c in Category.query.all()])
 
-#Yet to Be Implemented
 @app.route("/api/data/", methods=["GET"])
-def get_data_by_category():
+def get_specific_data():
     verify, error = verify_session(request)
-    print(verify)
     if not verify:
         return error
 
     body = json.loads(request.data)
     category = body.get("category")
-    relaxing = body.get("relaxing")
+    type = body.get("type")
     if category is None:
         return failure_response("No category")
-    if relaxing is None:
-        return failure_response("Not specified if relaxing or not")
-    #####
-    return success_response([x.serialize() for x in Data.query.filter_by(category=category,relaxing=relaxing)])
+    if type is None:
+        return failure_response("Type of data not specified")
+    if not (type=="quote" or type=="image"):
+        return failure_response("Invalid type")
+    if not (category in categories):
+        return failure_response("Invalid category")
+
+    category_data = Category().query.filter(Category.name==str(category)).first()
+
+    return success_response([x.serialize() for x in Data.query.filter_by(category=str(category_data),type=type)])
 
 
-#Yet To Be Implemented
 @app.route("/api/data/<int:user_id>/", methods=["GET"])
 def get_data_for_user(user_id):
     verify, error = verify_session(request)
@@ -188,16 +209,18 @@ def get_data_for_user(user_id):
         return error
 
     body = json.loads(request.data)
-    relaxing = body.get("relaxing")
+    type = body.get("type")
     user = User.query.filter_by(id=user_id).first()
     if user is None:
         return failure_response("No user")
-    if relaxing is None:
-        return failure_response("Not specified if relaxing or not")
+    if type is None:
+        return failure_response("Type of data not specified")
+    if not (type=="quote" or type=="image"):
+        return failure_response("Invalid type")
     categories = user.categories
     data=[]
     for i in categories:
-        data+=[x.serialize() for x in Data.query.filter_by(category=i,relaxing=relaxing)]
+        data+=[x.serialize() for x in Data.query.filter_by(category=str(i),type=type)]
     return success_response(data)
 
 
@@ -217,7 +240,7 @@ def assign_category(user_id):
         return failure_response("No category name")
     category = Category().query.filter(Category.name==name).first()
     if category is None:
-        category = Category(name)
+        return failure_response("Invalid category")
     user.categories.append(category)
     db.session.commit()
     return success_response(user.serialize())
@@ -237,10 +260,30 @@ def remove_category(user_id):
     if name is None:
         return failure_response("No category name")
     category = Category().query.filter(Category.name==name).first()
+    if category not in user.categories:
+        return failure_response("User does not have this category")
     user.categories.remove(category)
     db.session.commit()
     return success_response(user.serialize())
 
 
+def load_data():
+    while True:
+        for j in categories:
+            with app.app_context():
+                category = Category().query.filter(Category.name==j).first()
+                db.session.delete(category)
+                db.session.commit()
+                init_category(j)
+                for i in range(5):
+                    get_data(j)
+        time.sleep(60)
+
 if __name__ == "__main__":
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    thread = threading.Thread(target=load_data,daemon=True)
+    thread.start()
+    app.run(host='0.0.0.0', port=8080, debug=True)
+    
+
+
+
