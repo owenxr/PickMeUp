@@ -7,6 +7,7 @@ import os
 import dao
 import threading
 import time
+import random
 
 app = Flask(__name__)
 
@@ -273,7 +274,7 @@ def remove_category(user_id):
     return success_response(user.serialize())
 
 # Retrieve Quote in Category
-@app.route("/api/quote/", methods=["POST"])
+@app.route("/api/quote/", methods=["GET"])
 def get_quote():
     verify, error = verify_session(request)
 
@@ -287,6 +288,26 @@ def get_quote():
         return failure_response("No Category Specified", 400)
 
     quote = dao.get_quote(category, quotes_key, quotes_host)
+    return success_response(quote)
+
+# Retrieve random Quote for User
+@app.route("/api/<int:user_id>/quote/", methods=["GET"])
+def get_quote_for_user(user_id):
+    verify, error = verify_session(request)
+
+    if not verify:
+        return error
+
+    user = User.query.filter_by(id=user_id).first()
+    if user is None:
+        return failure_response("No user")
+    
+    categories = user.categories
+    if len(categories)==0:
+        return failure_response("User has no categories")
+    category = categories[random.randrange(0,len(categories))]
+
+    quote = dao.get_quote(category.name, quotes_key, quotes_host)
     return success_response(quote)
 
 # Automatically Changes Data Every Hour to Keep it Fresh
