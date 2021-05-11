@@ -1,9 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
-import bcrypt
 import datetime
 import hashlib
 import os
-
+import bcrypt
 
 db = SQLAlchemy()
 
@@ -39,23 +38,21 @@ class Data(db.Model):
     __tablename__ = "data"
     id = db.Column(db.Integer, primary_key =True)
     category = db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
-    data = db.Column(db.String(length=500), nullable=False)
-    relaxing = db.Column(db.Integer, nullable=False)
+    photo = db.Column(db.String(length=10000), nullable=False)
+    photographer = db.Column(db.String(length=500), nullable=False)
     
-
     def __init__(self, **kwargs):
-        self.data = kwargs.get("data")
-        self.relaxing = kwargs.get("relaxing")
+        self.photo = kwargs.get("photo")
+        self.photographer = kwargs.get("photographer")
         self.category = kwargs.get("category")
 
     def serialize(self):
         return {
             "id": self.id,
-            "category": self.category,
-            "data": self.data,
-            "relaxing": self.relaxing,
+            "category": Category.query.filter_by(id=self.category).first().name,
+            "photo": self.photo,
+            "photographer": self.photographer + " - Uploaded to Pexel Photos"
         }
-
 
 class User(db.Model):
     __tablename__ = "user"
@@ -85,6 +82,7 @@ class User(db.Model):
 
     def session(self):
         return {
+            "id": self.id,
             "session_token": self.session_token,
             "session_expiration": str(self.session_expiration),
             "update_token": self.update_token
@@ -112,3 +110,4 @@ class User(db.Model):
     def verify_update_token(self, update_token):
         return update_token == self.update_token
 
+        
