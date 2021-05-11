@@ -236,8 +236,7 @@ Response
 Request 
 
 { 
-    "authorization": "<STRING: SESSION TOKEN>",
-    "category": "<STRING: USER INPUT>"
+    "authorization": "<STRING: SESSION TOKEN>"
 }
 ```
 
