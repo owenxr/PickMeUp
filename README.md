@@ -1,6 +1,6 @@
 # PickMeUp
 The Feel Good App - Browse images you'll like and recieve quotes to brighten your day. <br/>
-*Note that this app was built to be suitable for Google SQL (mySQL server) and Google Cloud Run (Container Deployment)*
+*Note that this app was built to be suitable for Google SQL (mySQL server) and Google Cloud Run (Container Deployment) ($300 credit free for 90 days)*
 
 ### Deploy Link: https://prod-pvnxn5ufaq-uc.a.run.app/api/REQUEST/
 
@@ -8,6 +8,7 @@ The Feel Good App - Browse images you'll like and recieve quotes to brighten you
 * [Setup](#Setup)
 * [Final Submission Requirements](#Final-submission-requirements)
 * [API Specifications](#API-Specifications)
+* [Extra Cool Stuff](#Extra-cool-stuff)
 
 # Setup
 
@@ -18,7 +19,8 @@ Navigate to "src," create a venv, and run `pip3 install -r requirements.txt` <br
 ### Create API Keys
 Register and Generate API Keys using the following links
 * [Quotes API](https://rapidapi.com/yusufnb/api/quotes)
-* [Photos/Videos API](https://www.pexels.com/api/)
+* [Photos/Videos API](https://www.pexels.com/api/) <br/>
+*Free usage of API's limits the number of calls we can make. It is also difficult to find API's that are both free and allow automated usage.*
 
 ### Editing app.py
 
@@ -354,3 +356,11 @@ Response
         }
 }
 ```
+
+# Extra Cool Stuff
+* Multithreading
+   * Creates a Daemon Thread to automatically update the photos in the data table every hour
+   * This prevents causing the main thread to sleep and helps mitigate deadlocking during updating
+* mySQL server using Cloud SQL and Google Cloud Run to Deploy Containers
+* Authentication and Encryption and HTTPS Secured
+* Multiple Worker Capabilities for Gunicorn
