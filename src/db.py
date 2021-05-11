@@ -17,6 +17,7 @@ association_table = db.Table("association", db.Model.metadata,
 ###     TABLES
 ###
 
+# Category Table
 class Category(db.Model):
     __tablename__ = "category"
     id = db.Column(db.Integer, primary_key =True)
@@ -33,7 +34,7 @@ class Category(db.Model):
             "category": self.name
         }
 
-
+# Photos Table
 class Data(db.Model):
     __tablename__ = "data"
     id = db.Column(db.Integer, primary_key =True)
@@ -54,6 +55,7 @@ class Data(db.Model):
             "photographer": self.photographer + " - Uploaded to Pexel Photos"
         }
 
+# Users Table
 class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)    

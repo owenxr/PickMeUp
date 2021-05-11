@@ -66,12 +66,14 @@ with app.app_context():
 ###     Global Methods
 ###
 
+#Generate Success and Fail Responses 
 def success_response(data, code=200):
     return json.dumps({"success": True, "data": data}), code
 
 def failure_response(message, code=404):
     return json.dumps({"success": False, "error": message}), code
 
+# Initialize Category and Data
 def init_category(name):
     with app.app_context():
         if Category().query.filter(Category.name==name).first() is None:
@@ -96,6 +98,7 @@ def init_data(dat, ind):
         
         db.session.commit()
 
+# Category and Data Creation
 categories = ["pets","food","outdoors","sports","fashion"]
 
 for i in categories:
@@ -107,6 +110,7 @@ for dat in data:
    init_data(dat, j)
    j = j + 1
 
+# Authentication
 def extract_token(request):
     body = json.loads(request.data)
     auth_header = body.get('authorization')
@@ -130,6 +134,7 @@ def verify_session(request):
 ###     ROUTES
 ###
 
+# Register User
 @app.route("/api/register/", methods=["POST"])
 def register():
     body = json.loads(request.data)
@@ -156,6 +161,7 @@ def register():
     db.session.commit()
     return success_response(new_user.session(), 201)
 
+# Login User
 @app.route("/api/login/", methods=["POST"])
 def login():
     body = json.loads(request.data)
@@ -171,6 +177,7 @@ def login():
         return failure_response("No email or password")
     return success_response(user.session(), 201)
 
+# Update User Session
 @app.route("/api/update_session/", methods=["POST"])
 def update_session():
     success, update_token, error = extract_token(request)
@@ -183,13 +190,12 @@ def update_session():
     db.session.commit()
     return success_response(user.session(), 201)
     
-
-
+# Get All Categories
 @app.route("/api/categories/", methods=["GET"])
 def get_categories():
     return success_response([c.serialize() for c in Category.query.all()])
 
-#Yet to Be Implemented
+# Get Data Within Categories
 @app.route("/api/data/", methods=["POST"])
 def get_data_by_category():
     verify, error = verify_session(request)
@@ -202,11 +208,11 @@ def get_data_by_category():
     category = Category.query.filter_by(name=cat).first()
     if category is None:
         return failure_response("No category")
-    #####
+
     return success_response([x.serialize() for x in Data.query.filter_by(category=category.id)])
 
 
-#Yet To Be Implemented
+# Get Data User Likes
 @app.route("/api/data/<int:user_id>/", methods=["POST"])
 def get_data_for_user(user_id):
     verify, error = verify_session(request)
@@ -223,7 +229,7 @@ def get_data_for_user(user_id):
     return success_response(data)
 
 
-
+# Attach User to Category
 @app.route("/api/<int:user_id>/category/", methods=["POST"])
 def assign_category(user_id):
     verify, error = verify_session(request)
@@ -244,7 +250,7 @@ def assign_category(user_id):
     db.session.commit()
     return success_response(user.serialize())
 
-
+# Remove User From Category
 @app.route("/api/<int:user_id>/category/", methods=["DELETE"])
 def remove_category(user_id):
     verify, error = verify_session(request)
@@ -266,6 +272,7 @@ def remove_category(user_id):
     db.session.commit()
     return success_response(user.serialize())
 
+# Retrieve Quote in Category
 @app.route("/api/quote/", methods=["POST"])
 def get_quote():
     verify, error = verify_session(request)
@@ -282,6 +289,8 @@ def get_quote():
     quote = dao.get_quote(category, quotes_key, quotes_host)
     return success_response(quote)
 
+# Automatically Changes Data Every Hour to Keep it Fresh
+# Set as Daemon Thread
 def load_data():
     while True:
         time.sleep(3600)

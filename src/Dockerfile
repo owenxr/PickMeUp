@@ -9,9 +9,6 @@ ENV APP_HOME /app
 COPY . /app
 WORKDIR $APP_HOME
 
-RUN cd ${APP_HOME}
-RUN ls
-
 # 4
 ENV PORT 8080
 
