@@ -119,7 +119,7 @@ Response
 
 {
   "success": true, 
-  "data": 
+  "data": [
         {
           "id": "<INT: PHOTO ID>", 
           "category": "<STRING: CATEGORY NAME>",
@@ -132,7 +132,8 @@ Response
           "photo": "<STRING: PHOTO URL>",
           "photographer": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
         },
-        ...
+        "..."
+    ]
 }
 ```
 
@@ -152,20 +153,21 @@ Response
 
 {
   "success": true, 
-  "data": 
+  "data":  [
         {
           "id": "<INT: PHOTO ID>", 
           "category": "<STRING: CATEGORY NAME>",
           "photo": "<STRING: PHOTO URL>",
           "photographer": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
         },
-        {
-          "id": "<INT: PHOTO ID>", 
-          "category": "<STRING: CATEGORY NAME>",
-          "photo": "<STRING: PHOTO URL>",
-          "photographer": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
-        },
-        ...
+          {
+            "id": "<INT: PHOTO ID>", 
+            "category": "<STRING: CATEGORY NAME>",
+            "photo": "<STRING: PHOTO URL>",
+            "photographer": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
+          },
+        "..."
+    ]
 }
 ```
 
@@ -185,7 +187,7 @@ Response
 
 {
   "success": true, 
-  "data": 
+  "data": [
         {
           "id": "<INT: USER ID>",
           "email": "<STRING: USER EMAIL>",
@@ -197,10 +199,10 @@ Response
               "id": "<INT: CATEGORY ID>",
               "category": "<STRING: CATEGORY NAME>"
             },
-            ...
+            "..."
           ]
         }
-        ...
+    ]
 }
 ```
 
@@ -220,7 +222,7 @@ Response
 
 {
   "success": true, 
-  "data": 
+  "data": [
         {
           "id": "<INT: USER ID>",
           "email": "<STRING: USER EMAIL>",
@@ -232,10 +234,10 @@ Response
               "id": "<INT: CATEGORY ID>",
               "category": "<STRING: CATEGORY NAME>"
             },
-            ...
+            "..."
           ]
         }
-        ...
+    ]
 }
 ```
 
@@ -261,6 +263,5 @@ Response
           "quote": "<STRING: QUOTE>",
           "author": "<STRING: AUTHOR>"
         }
-        ...
 }
 ```
