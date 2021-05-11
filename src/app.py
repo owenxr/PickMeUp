@@ -284,16 +284,15 @@ def get_quote():
 
 def load_data():
     while True:
+        time.sleep(3600)
         dat = dao.retrive_data(categories, pexels_key)
         j = 1
         for dat in data:
            init_data(dat, j)
            j = j + 1
 
-        time.sleep(3600)
-
 if __name__ == "__main__":
     thread = threading.Thread(target=load_data, daemon=True)
     thread.start()
 
-    app.run(host='127.0.0.1', port=8080, debug=False)
+    app.run(host='127.0.0.1', port=8080)
