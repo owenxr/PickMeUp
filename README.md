@@ -363,4 +363,3 @@ Response
    * This prevents causing the main thread to sleep and helps mitigate deadlocking during updating
 * mySQL server using Cloud SQL and Google Cloud Run to Deploy Containers
 * Authentication and Encryption and HTTPS Secured
-* Multiple Worker Capabilities for Gunicorn
