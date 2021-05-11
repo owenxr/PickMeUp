@@ -284,7 +284,7 @@ def get_quote():
 
 def load_data():
     while True:
-        dao.retrive_data(categories, pexels_key)
+        dat = dao.retrive_data(categories, pexels_key)
         j = 1
         for dat in data:
            init_data(dat, j)
