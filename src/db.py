@@ -38,14 +38,15 @@ class Category(db.Model):
 class Data(db.Model):
     __tablename__ = "data"
     id = db.Column(db.Integer, primary_key =True)
+    ###########category.name?category.id?
     category = db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
     data = db.Column(db.String(length=500), nullable=False)
-    relaxing = db.Column(db.Integer, nullable=False)
+    type = db.Column(db.String, nullable=False)
     
 
     def __init__(self, **kwargs):
         self.data = kwargs.get("data")
-        self.relaxing = kwargs.get("relaxing")
+        self.type = kwargs.get("type")
         self.category = kwargs.get("category")
 
     def serialize(self):
@@ -53,7 +54,7 @@ class Data(db.Model):
             "id": self.id,
             "category": self.category,
             "data": self.data,
-            "relaxing": self.relaxing,
+            "type": self.type,
         }
 
 
@@ -104,7 +105,7 @@ class User(db.Model):
         self.update_token = self._urlsafe_base_64()
 
     def verify_password(self, password):
-        return bcrypt.checkpw(password.encode("utf8"), self.password_digest.encode("utf8"))
+        return bcrypt.checkpw(password.encode("utf8"), self.password_digest)
 
     def verify_session_token(self, session_token):
         return session_token == self.session_token and datetime.datetime.now() < self.session_expiration
