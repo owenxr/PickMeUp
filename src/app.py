@@ -199,7 +199,8 @@ def update_session():
     user.renew_session()
     db.session.commit()
     return success_response(user.session(), 201)
-    
+
+# Get User's Information
 @app.route("/api/info/<int:user_id>/", methods=["POST"])
 def get_user_info(user_id):
     verify, error = verify_session(request)
