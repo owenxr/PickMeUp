@@ -89,6 +89,7 @@ Navigate to "src" and run `$ python3 app.py`
     * [Register](#Register)
     * [Login](#Login)
     * [Update Session](#Update-session)
+    * [Get User Info](#Get-user-information)
     * [Attach Preference to User](#Add-category-to-user-preferences)
     * [Remove Preference from User](#Remove-category-from-user-preferences)
 * Content Management
@@ -96,6 +97,7 @@ Navigate to "src" and run `$ python3 app.py`
     * [Retrieve Photos in a Category](#Get-photos-of-category)
     * [Retrieve Photos in User's Categories](#Get-photos-user-will-like)
     * [Get Themed Quote](#Get-themed-quote)
+    * [Get Random User Quote](#Get-random-quote-for-user)
 
 ### Register
 `POST` `/api/register/`
