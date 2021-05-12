@@ -162,7 +162,7 @@ Response
 Request 
 
 { 
-    "authorization": "<STRING: UPDATE TOKEN>"
+    "authorization": "<STRING: SESSION TOKEN>"
 }
 ```
 
