@@ -425,6 +425,6 @@ Response
 # Extra Cool Stuff
 * Multithreading
    * Creates a Daemon Thread to automatically update the photos in the data table every hour
-   * This prevents causing the main thread to sleep and helps mitigate deadlocking during updating
+   * This prevents causing the main thread to sleep during updates 
 * mySQL server using Cloud SQL and Google Cloud Run to Deploy Containers
 * Sports an Authentication Proccess
