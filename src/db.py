@@ -85,6 +85,8 @@ class User(db.Model):
     def session(self):
         return {
             "id": self.id,
+            "name": self.name,
+            "email": self.email,
             "session_token": self.session_token,
             "session_expiration": str(self.session_expiration),
             "update_token": self.update_token

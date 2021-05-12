@@ -3,3 +3,4 @@ Hosting
 /src/venv
 /src/__pycache__
 .vscode
+/src/pickmeup.db

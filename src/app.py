@@ -72,7 +72,16 @@ def success_response(data, code=200):
     return json.dumps({"success": True, "data": data}), code
 
 def failure_response(message, code=404):
-    return json.dumps({"success": False, "error": message}), code
+    #Response requested by frontend member
+    failure = {
+            "id": message,
+            "name": "failed",
+            "email": "failed",
+            "session_token": "failed",
+            "session_expiration": "failed",
+            "update_token": "failed"
+    }
+    return json.dumps({"success": False, "data": failure}), code
 
 # Initialize Category and Data
 def init_category(name):
@@ -191,6 +200,19 @@ def update_session():
     db.session.commit()
     return success_response(user.session(), 201)
     
+@app.route("/api/info/<int:user_id>/", methods=["POST"])
+def get_user_info(user_id):
+    verify, error = verify_session(request)
+    if not verify:
+        return error
+
+    user = User.query.filter_by(id=user_id).first()
+    if user is None:
+        return failure_response("No user")
+
+    return success_response(user.serialize())
+        
+
 # Get All Categories
 @app.route("/api/categories/", methods=["GET"])
 def get_categories():
@@ -209,9 +231,11 @@ def get_data_by_category():
     category = Category.query.filter_by(name=cat).first()
     if category is None:
         return failure_response("No category")
+    
+    data = [dao.get_quote(category.name, quotes_key, quotes_host)]
+    data += [x.serialize() for x in Data.query.filter_by(category=category.id)]
 
-    return success_response([x.serialize() for x in Data.query.filter_by(category=category.id)])
-
+    return success_response(data)
 
 # Get Data User Likes
 @app.route("/api/data/<int:user_id>/", methods=["POST"])
@@ -226,7 +250,10 @@ def get_data_for_user(user_id):
     categories = user.categories
     data=[]
     for i in categories:
+        data+=[dao.get_quote(i.name, quotes_key, quotes_host)]
+    for i in categories:
         data+=[x.serialize() for x in Data.query.filter_by(category=i.id)]
+
     return success_response(data)
 
 
@@ -274,7 +301,7 @@ def remove_category(user_id):
     return success_response(user.serialize())
 
 # Retrieve Quote in Category
-@app.route("/api/quote/", methods=["GET"])
+@app.route("/api/quote/", methods=["POST"])
 def get_quote():
     verify, error = verify_session(request)
 
@@ -291,7 +318,7 @@ def get_quote():
     return success_response(quote)
 
 # Retrieve random Quote for User
-@app.route("/api/<int:user_id>/quote/", methods=["GET"])
+@app.route("/api/<int:user_id>/quote/", methods=["POST"])
 def get_quote_for_user(user_id):
     verify, error = verify_session(request)
 
@@ -324,5 +351,5 @@ def load_data():
 if __name__ == "__main__":
     thread = threading.Thread(target=load_data, daemon=True)
     thread.start()
-
-    app.run(host='127.0.0.1', port=8080)
+    port = os.environ.get("PORT", 8080)
+    app.run(host='0.0.0.0', port=port)
