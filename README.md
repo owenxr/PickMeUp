@@ -27,7 +27,7 @@ Register and Generate API Keys using the following links
 ### Editing app.py
 
 Pay attention to lines 17-33 of `app.py`. 
-* If you will be using Sqlite3 with SQLAlchemy (**BE WARNED** Sqlite3 is untested, some SQLalchemy ORM paramters may need to be changed in db.py),
+* If you will be using Sqlite3 with SQLAlchemy (**BE WARNED** Sqlite3 is untested, some SQLalchemy ORM paramters may need to be changed in `db.py`),
     * In the "src" directory, create a `vars.config` file structured below and replace key values
     * ```config
       [APIKEY]
