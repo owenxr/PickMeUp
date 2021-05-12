@@ -116,7 +116,9 @@ Response
   "success": true, 
   "data": 
       {
-          "id": "<INT: USER ID>",
+          "id": "<INT: USER_ID>",
+          "name": "<STRING: NAME>",
+          "email": "<STRING: EMAIL>",
           "session_token": "<STRING: SESSION TOKEN>", 
           "session_expiration": "<STRING: DATE-TIME>", 
           "update_token": "<STRING: UPDATE TOKEN>"
@@ -142,7 +144,9 @@ Response
   "success": true, 
   "data": 
       {
-          "id": "<INT: USER ID>",
+          "id": "<INT: USER_ID>",
+          "name": "<STRING: NAME>",
+          "email": "<STRING: EMAIL>",
           "session_token": "<STRING: SESSION TOKEN>", 
           "session_expiration": "<STRING: DATE-TIME>", 
           "update_token": "<STRING: UPDATE TOKEN>"
@@ -167,12 +171,46 @@ Response
   "success": true, 
   "data": 
       {
+          "id": "<INT: USER_ID>",
+          "name": "<STRING: NAME>",
+          "email": "<STRING: EMAIL>",
           "session_token": "<STRING: SESSION TOKEN>", 
           "session_expiration": "<STRING: DATE-TIME>", 
           "update_token": "<STRING: UPDATE TOKEN>"
         }
 }
 ```
+
+### Get User Information
+`POST` `/api/info/<int:user_id>/`
+```json
+Request 
+
+{ 
+    "authorization": "<STRING: UPDATE TOKEN>"
+}
+```
+
+```json
+Response
+
+{
+  "success": true, 
+  "data": 
+      {
+         "id": "<INT: USER_ID>",
+         "name": "<STRING: NAME>",
+         "email": "<STRING: EMAIL>",
+         "categories": [
+            {
+               "id": "<INT: CATEGORY ID>",
+               "category": "<STRING: CATEGORY NAME>"
+            }
+            "..."
+         ]
+      }
+}
+````
 
 ### Get Categories
 `GET` `/api/categories/`
@@ -196,7 +234,7 @@ Response
 }
 ```
 
-### Get Photos Of Category
+### Get Photos/Quote Of Category
 `POST` `/api/data/`
 ```json
 Request 
@@ -213,11 +251,10 @@ Response
 {
   "success": true, 
   "data": [
-        {
-          "id": "<INT: PHOTO ID>", 
-          "category": "<STRING: CATEGORY NAME>",
-          "photo": "<STRING: PHOTO URL>",
-          "photographer": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
+         {
+          "category": "<STRING: QUOTE THEME>",
+          "quote": "<STRING: QUOTE>",
+          "author": "<STRING: AUTHOR>"
         },
         {
           "id": "<INT: PHOTO ID>", 
@@ -225,7 +262,7 @@ Response
           "photo": "<STRING: PHOTO URL>",
           "photographer": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
         },
-        "..."
+        "... (PHOTOS)"
     ]
 }
 ```
@@ -247,18 +284,18 @@ Response
   "success": true, 
   "data":  [
         {
+          "category": "<STRING: QUOTE THEME>",
+          "quote": "<STRING: QUOTE>",
+          "author": "<STRING: AUTHOR>"
+        },
+        "... (QUOTES FOR ALL USER PREFERENCES)"
+        {
           "id": "<INT: PHOTO ID>", 
           "category": "<STRING: CATEGORY NAME>",
           "photo": "<STRING: PHOTO URL>",
           "photographer": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
         },
-          {
-            "id": "<INT: PHOTO ID>", 
-            "category": "<STRING: CATEGORY NAME>",
-            "photo": "<STRING: PHOTO URL>",
-            "photographer": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
-          },
-        "..."
+        "... (PHOTOS)"
     ]
 }
 ```
