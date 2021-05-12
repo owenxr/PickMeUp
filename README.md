@@ -304,7 +304,7 @@ Response
 ```
 
 ### Add Category to User Preferences
-`POST` `/api/<int:user_id>/category`
+`POST` `/api/<int:user_id>/category/`
 ```json
 Request 
 
@@ -339,7 +339,7 @@ Response
 ```
 
 ### Remove Category from User Preferences
-`DELETE` `/api/<int:user_id>/category`
+`DELETE` `/api/<int:user_id>/category/`
 ```json
 Request 
 
