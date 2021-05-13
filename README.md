@@ -117,12 +117,48 @@ Response
   "data": 
       {
           "id": "<INT: USER ID>",
+	       "name": "<STRING: USER NAME>",
+	       "email": "<STRING: EMAIL">,
           "session_token": "<STRING: SESSION TOKEN>", 
           "session_expiration": "<STRING: DATE-TIME>", 
           "update_token": "<STRING: UPDATE TOKEN>"
+
         }
 }
 ```
+
+### Get User Info
+`POST` `/api/info/<int:user_id>/`
+```json
+Request 
+
+{ 
+    "authorization": "<STRING: SESSION TOKEN>"
+}
+```
+
+```json
+Response
+
+{
+  "success": true, 
+  "data": 
+	{
+       "id": "<INT: USER ID>",
+	    “name”: “<STRING: USER NAME>”,
+	    “email”: “<STRING: EMAIL”>,
+	    “categories”: [ {
+	          {
+	         “id”: “<INT: Category Id>”,
+	         “category”: <STRING: Category name>”
+	         }
+	         ...
+	    } ]
+
+     }
+}
+```
+
 
 ### Login
 `POST` `/api/login/`
@@ -143,6 +179,8 @@ Response
   "data": 
       {
           "id": "<INT: USER ID>",
+          “name”: “<STRING: USER NAME>”,
+	       “email”: “<STRING: EMAIL”>,
           "session_token": "<STRING: SESSION TOKEN>", 
           "session_expiration": "<STRING: DATE-TIME>", 
           "update_token": "<STRING: UPDATE TOKEN>"
@@ -167,6 +205,9 @@ Response
   "success": true, 
   "data": 
       {
+          “Id”: “<STRING: USER_ID>”,
+	       “name”: “<STRING: USER NAME>”,
+	       “email”: “<STRING: EMAIL”>,
           "session_token": "<STRING: SESSION TOKEN>", 
           "session_expiration": "<STRING: DATE-TIME>", 
           "update_token": "<STRING: UPDATE TOKEN>"
@@ -213,24 +254,32 @@ Response
 {
   "success": true, 
   "data": [
-        {
-          "id": "<INT: PHOTO ID>", 
+         {
           "category": "<STRING: CATEGORY NAME>",
-          "photo": "<STRING: PHOTO URL>",
-          "photographer": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
+          “type”: “quote”,
+          "quote": "<STRING: QUOTE STRING>",
+          "author": "<STRING: AUTHOR NAME>"
         },
         {
           "id": "<INT: PHOTO ID>", 
+          “type”: “photo”,
           "category": "<STRING: CATEGORY NAME>",
-          "photo": "<STRING: PHOTO URL>",
-          "photographer": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
+          "source": "<STRING: PHOTO URL>",
+          "author": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
+        },
+        {
+          "id": "<INT: PHOTO ID>", 
+          “type”: “photo”,
+          "category": "<STRING: CATEGORY NAME>",
+          "source": "<STRING: PHOTO URL>",
+          "author": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
         },
         "..."
     ]
 }
 ```
 
-### Get Photos Of User Will Like
+### Get Photos of Categories User Likes
 `POST` `/api/data/<int:user_id>/`
 ```json
 Request 
@@ -247,18 +296,27 @@ Response
   "success": true, 
   "data":  [
         {
-          "id": "<INT: PHOTO ID>", 
           "category": "<STRING: CATEGORY NAME>",
-          "photo": "<STRING: PHOTO URL>",
-          "photographer": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
+	       “type”: “quote”,
+          "source": "<STRING: QUOTE STRING>",
+          "author": "<STRING: AUTHOR NAME>"
         },
-          {
-            "id": "<INT: PHOTO ID>", 
-            "category": "<STRING: CATEGORY NAME>",
-            "photo": "<STRING: PHOTO URL>",
-            "photographer": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
-          },
-        "..."
+            … (as many as user’s liked categories)
+        {
+          "id": "<INT: PHOTO ID>", 
+          “type”: “photo”,
+          "category": "<STRING: CATEGORY NAME>",
+          "source": "<STRING: PHOTO URL>",
+          "author": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
+        },
+        {
+          "id": "<INT: PHOTO ID>", 
+          “type”: “photo”,
+          "category": "<STRING: CATEGORY NAME>",
+          "source": "<STRING: PHOTO URL>",
+          "author": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
+        },
+      "..."
     ]
 }
 ```
@@ -333,7 +391,7 @@ Response
 }
 ```
 
-### Get Themed Quote
+### Get Quote of Specific Category
 `GET` `/api/quote/`
 ```json
 Request 
@@ -352,8 +410,10 @@ Response
   "data": 
         {
           "category": "<STRING: QUOTE THEME>",
-          "quote": "<STRING: QUOTE>",
+          “type”: “quote”,
+          "source": "<STRING: QUOTE>",
           "author": "<STRING: AUTHOR>"
+
         }
 }
 ```
@@ -376,8 +436,10 @@ Response
   "data": 
         {
           "category": "<STRING: QUOTE THEME>",
-          "quote": "<STRING: QUOTE>",
+          “type”: “quote”,
+          "source": "<STRING: QUOTE>",
           "author": "<STRING: AUTHOR>"
+
         }
 }
 ```
