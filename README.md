@@ -10,6 +10,19 @@ ANDROID REPO: [GITHUB](https://github.com/nct33/PickMeUp)
 Link: https://prod-pvnxn5ufaq-uc.a.run.app/api/REQUEST/
 <br/> Fill In Request
 
+# Features
+<img width="375" alt="Screen Shot 2021-05-13 at 12 30 12 AM" src="https://user-images.githubusercontent.com/67097401/118077657-87c6b880-b382-11eb-809b-405de1c28636.png">
+
+* Registration and Login
+
+<img width="375" alt="Screen Shot 2021-05-13 at 12 30 22 AM" src="https://user-images.githubusercontent.com/67097401/118077662-8ac1a900-b382-11eb-8683-5c1be75c684a.png">
+
+* Selecting Categories to View
+
+![Splash](https://user-images.githubusercontent.com/67097401/118077710-a036d300-b382-11eb-934f-791e0eba896f.png)
+
+* Scroll Through Photos and Quotes
+
 # Table Of Contents
 * [Setup](#Setup)
 * [Final Submission Requirements](#Final-submission-requirements)
