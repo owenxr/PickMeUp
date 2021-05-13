@@ -170,8 +170,8 @@ Response
 	    "email": "<STRING: EMAIL>",
 	    "categories": [
 	         {
-	         "id": "<INT: Category Id>",
-	         "category": "<STRING: Category name>"
+	         "id": "<INT: CATEGORY ID>",
+	         "category": "<STRING: CATEGORY NAME>"
 	         }
 	         "..."
 	     ]
@@ -226,7 +226,7 @@ Response
   "success": true, 
   "data": 
       {
-          "Id": "<STRING: USER_ID>",
+          "id": "<STRING: USER_ID>",
 	  "name": "<STRING: USER NAME>",
 	  "email": "<STRING: EMAIL>",
           "session_token": "<STRING: SESSION TOKEN>", 
@@ -281,6 +281,7 @@ Response
           "quote": "<STRING: QUOTE STRING>",
           "author": "<STRING: AUTHOR NAME>"
         },
+	"..."
         {
           "id": "<INT: PHOTO ID>", 
           "type": "photo",
@@ -413,7 +414,7 @@ Response
 ```
 
 ### Get Themed Quote
-`GET` `/api/quote/`
+`POST` `/api/quote/`
 ```json
 Request 
 
@@ -433,14 +434,13 @@ Response
           "category": "<STRING: QUOTE THEME>",
           "type": "quote",
           "source": "<STRING: QUOTE>",
-          "author": "<STRING: AUTHOR>"
-
+          "author": "<STRING: AUTHOR>
         }
 }
 ```
 
 ### Get Random Quote for User
-`GET` `/api/<int:user_id>/quote/`
+`POST` `/api/<int:user_id>/quote/`
 ```json
 Request 
 
