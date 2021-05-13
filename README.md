@@ -117,8 +117,8 @@ Response
   "data": 
       {
           "id": "<INT: USER ID>",
-	       "name": "<STRING: USER NAME>",
-	       "email": "<STRING: EMAIL">,
+	  "name": "<STRING: USER NAME>",
+	  "email": "<STRING: EMAIL">,
           "session_token": "<STRING: SESSION TOKEN>", 
           "session_expiration": "<STRING: DATE-TIME>", 
           "update_token": "<STRING: UPDATE TOKEN>"
@@ -144,13 +144,13 @@ Response
   "success": true, 
   "data": 
 	{
-       "id": "<INT: USER ID>",
-	    “name”: “<STRING: USER NAME>”,
-	    “email”: “<STRING: EMAIL”>,
-	    “categories”: [ {
+       	    "id": "<INT: USER ID>",
+	    "name": "<STRING: USER NAME>",
+	    "email": "<STRING: EMAIL">,
+	    "categories": [ {
 	          {
-	         “id”: “<INT: Category Id>”,
-	         “category”: <STRING: Category name>”
+	         "id": "<INT: Category Id>",
+	         "category": "<STRING: Category name>"
 	         }
 	         ...
 	    } ]
@@ -179,8 +179,8 @@ Response
   "data": 
       {
           "id": "<INT: USER ID>",
-          “name”: “<STRING: USER NAME>”,
-	       “email”: “<STRING: EMAIL”>,
+          "name": "<STRING: USER NAME>",
+	  "email": "<STRING: EMAIL">,
           "session_token": "<STRING: SESSION TOKEN>", 
           "session_expiration": "<STRING: DATE-TIME>", 
           "update_token": "<STRING: UPDATE TOKEN>"
@@ -205,9 +205,9 @@ Response
   "success": true, 
   "data": 
       {
-          “Id”: “<STRING: USER_ID>”,
-	       “name”: “<STRING: USER NAME>”,
-	       “email”: “<STRING: EMAIL”>,
+          "Id": "<STRING: USER_ID>",
+	  "name": "<STRING: USER NAME>",
+	  "email": "<STRING: EMAIL">,
           "session_token": "<STRING: SESSION TOKEN>", 
           "session_expiration": "<STRING: DATE-TIME>", 
           "update_token": "<STRING: UPDATE TOKEN>"
@@ -256,20 +256,20 @@ Response
   "data": [
          {
           "category": "<STRING: CATEGORY NAME>",
-          “type”: “quote”,
+          "type": "quote",
           "quote": "<STRING: QUOTE STRING>",
           "author": "<STRING: AUTHOR NAME>"
         },
         {
           "id": "<INT: PHOTO ID>", 
-          “type”: “photo”,
+          "type": "photo",
           "category": "<STRING: CATEGORY NAME>",
           "source": "<STRING: PHOTO URL>",
           "author": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
         },
         {
           "id": "<INT: PHOTO ID>", 
-          “type”: “photo”,
+          "type": "photo",
           "category": "<STRING: CATEGORY NAME>",
           "source": "<STRING: PHOTO URL>",
           "author": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
@@ -297,21 +297,21 @@ Response
   "data":  [
         {
           "category": "<STRING: CATEGORY NAME>",
-	       “type”: “quote”,
+	  "type": "quote",
           "source": "<STRING: QUOTE STRING>",
           "author": "<STRING: AUTHOR NAME>"
         },
             … (as many as user’s liked categories)
         {
           "id": "<INT: PHOTO ID>", 
-          “type”: “photo”,
+          "type": "photo",
           "category": "<STRING: CATEGORY NAME>",
           "source": "<STRING: PHOTO URL>",
           "author": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
         },
         {
           "id": "<INT: PHOTO ID>", 
-          “type”: “photo”,
+          "type": "photo",
           "category": "<STRING: CATEGORY NAME>",
           "source": "<STRING: PHOTO URL>",
           "author": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
@@ -410,7 +410,7 @@ Response
   "data": 
         {
           "category": "<STRING: QUOTE THEME>",
-          “type”: “quote”,
+          "type": "quote",
           "source": "<STRING: QUOTE>",
           "author": "<STRING: AUTHOR>"
 
@@ -436,7 +436,7 @@ Response
   "data": 
         {
           "category": "<STRING: QUOTE THEME>",
-          “type”: “quote”,
+          "type": "quote",
           "source": "<STRING: QUOTE>",
           "author": "<STRING: AUTHOR>"
 
