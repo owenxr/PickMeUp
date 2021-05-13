@@ -1,9 +1,13 @@
 # PickMeUp
 The Feel Good App - Browse images you'll like and recieve quotes to brighten your day. <br/>
+<br/>
 *Note that this app was built to be suitable for Google SQL (mySQL server) and Google Cloud Run (Container Deployment) ($300 credit free for 90 days)*
+<br/>
+<br/>
+ANDROID REPO: [GITHUB](https://github.com/nct33/PickMeUp)
 
 ### Deploy Link
-Link: https://work-pvnxn5ufaq-uc.a.run.app/api/REQUEST/
+Link: https://prod-pvnxn5ufaq-uc.a.run.app/api/REQUEST/
 <br/> Fill In Request
 
 # Table Of Contents
@@ -27,7 +31,7 @@ Register and Generate API Keys using the following links
 ### Editing app.py
 
 Pay attention to lines 17-33 of `app.py`. 
-* If you will be using Sqlite3 with SQLAlchemy (**BE WARNED** Sqlite3 is untested, some SQLalchemy ORM paramters may need to be changed in `db.py`),
+* If you will be using Sqlite3 with SQLAlchemy, 
     * In the "src" directory, create a `vars.config` file structured below and replace key values
     * ```config
       [APIKEY]
@@ -81,16 +85,15 @@ Navigate to "src" and run `$ python3 app.py`
 * Relationship Database schema
     * Look at lines 11-14 in `db.py`
     * Used Many-to-Many association between Users and Categories they like
-    * Used One-to-Many relation between Categories and Data in each Category
 * [Deployment](#Deploy-link)
 
 # API Specifications 
 
 * User Management
     * [Register](#Register)
+    * [Get User's Information](#Get-User-Info)
     * [Login](#Login)
     * [Update Session](#Update-session)
-    * [Get User Info](#Get-user-information)
     * [Attach Preference to User](#Add-category-to-user-preferences)
     * [Remove Preference from User](#Remove-category-from-user-preferences)
 * Content Management
@@ -98,7 +101,7 @@ Navigate to "src" and run `$ python3 app.py`
     * [Retrieve Photos in a Category](#Get-photos-of-category)
     * [Retrieve Photos in User's Categories](#Get-photos-user-will-like)
     * [Get Themed Quote](#Get-themed-quote)
-    * [Get Random User Quote](#Get-random-quote-for-user)
+    * [Get Random Quote in User's Categories](#Get-random-quote-for-user)
 
 ### Register
 `POST` `/api/register/`
@@ -119,15 +122,49 @@ Response
   "success": true, 
   "data": 
       {
-          "id": "<INT: USER_ID>",
-          "name": "<STRING: NAME>",
-          "email": "<STRING: EMAIL>",
+          "id": "<INT: USER ID>",
+	  "name": "<STRING: USER NAME>",
+	  "email": "<STRING: EMAIL>",
           "session_token": "<STRING: SESSION TOKEN>", 
           "session_expiration": "<STRING: DATE-TIME>", 
           "update_token": "<STRING: UPDATE TOKEN>"
+
         }
 }
 ```
+
+### Get User Info
+`POST` `/api/info/<int:user_id>/`
+```json
+Request 
+
+{ 
+    "authorization": "<STRING: SESSION TOKEN>"
+}
+```
+
+```json
+Response
+
+{
+  "success": true, 
+  "data": 
+	{
+       	    "id": "<INT: USER ID>",
+	    "name": "<STRING: USER NAME>",
+	    "email": "<STRING: EMAIL>",
+	    "categories": [
+	         {
+	         "id": "<INT: Category Id>",
+	         "category": "<STRING: Category name>"
+	         }
+	         "..."
+	     ]
+
+     }
+}
+```
+
 
 ### Login
 `POST` `/api/login/`
@@ -147,9 +184,9 @@ Response
   "success": true, 
   "data": 
       {
-          "id": "<INT: USER_ID>",
-          "name": "<STRING: NAME>",
-          "email": "<STRING: EMAIL>",
+          "id": "<INT: USER ID>",
+          "name": "<STRING: USER NAME>",
+	  "email": "<STRING: EMAIL>",
           "session_token": "<STRING: SESSION TOKEN>", 
           "session_expiration": "<STRING: DATE-TIME>", 
           "update_token": "<STRING: UPDATE TOKEN>"
@@ -163,7 +200,7 @@ Response
 Request 
 
 { 
-    "authorization": "<STRING: SESSION TOKEN>"
+    "authorization": "<STRING: UPDATE TOKEN>"
 }
 ```
 
@@ -174,46 +211,15 @@ Response
   "success": true, 
   "data": 
       {
-          "id": "<INT: USER_ID>",
-          "name": "<STRING: NAME>",
-          "email": "<STRING: EMAIL>",
+          "Id": "<STRING: USER_ID>",
+	  "name": "<STRING: USER NAME>",
+	  "email": "<STRING: EMAIL>",
           "session_token": "<STRING: SESSION TOKEN>", 
           "session_expiration": "<STRING: DATE-TIME>", 
           "update_token": "<STRING: UPDATE TOKEN>"
         }
 }
 ```
-
-### Get User Information
-`POST` `/api/info/<int:user_id>/`
-```json
-Request 
-
-{ 
-    "authorization": "<STRING: SESSION TOKEN>"
-}
-```
-
-```json
-Response
-
-{
-  "success": true, 
-  "data": 
-      {
-         "id": "<INT: USER_ID>",
-         "name": "<STRING: NAME>",
-         "email": "<STRING: EMAIL>",
-         "categories": [
-            {
-               "id": "<INT: CATEGORY ID>",
-               "category": "<STRING: CATEGORY NAME>"
-            }
-            "..."
-         ]
-      }
-}
-````
 
 ### Get Categories
 `GET` `/api/categories/`
@@ -237,7 +243,7 @@ Response
 }
 ```
 
-### Get Photos/Quote Of Category
+### Get Photos Of Category
 `POST` `/api/data/`
 ```json
 Request 
@@ -255,22 +261,31 @@ Response
   "success": true, 
   "data": [
          {
-          "category": "<STRING: QUOTE THEME>",
-          "quote": "<STRING: QUOTE>",
-          "author": "<STRING: AUTHOR>"
+          "category": "<STRING: CATEGORY NAME>",
+          "type": "quote",
+          "quote": "<STRING: QUOTE STRING>",
+          "author": "<STRING: AUTHOR NAME>"
         },
         {
           "id": "<INT: PHOTO ID>", 
+          "type": "photo",
           "category": "<STRING: CATEGORY NAME>",
-          "photo": "<STRING: PHOTO URL>",
-          "photographer": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
+          "source": "<STRING: PHOTO URL>",
+          "author": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
         },
-        "... (PHOTOS)"
+        {
+          "id": "<INT: PHOTO ID>", 
+          "type": "photo",
+          "category": "<STRING: CATEGORY NAME>",
+          "source": "<STRING: PHOTO URL>",
+          "author": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
+        },
+        "..."
     ]
 }
 ```
 
-### Get Photos Of User Will Like
+### Get Photos User Will Like
 `POST` `/api/data/<int:user_id>/`
 ```json
 Request 
@@ -287,24 +302,33 @@ Response
   "success": true, 
   "data":  [
         {
-          "category": "<STRING: QUOTE THEME>",
-          "quote": "<STRING: QUOTE>",
-          "author": "<STRING: AUTHOR>"
+          "category": "<STRING: CATEGORY NAME>",
+	  "type": "quote",
+          "source": "<STRING: QUOTE STRING>",
+          "author": "<STRING: AUTHOR NAME>"
         },
-        "... (QUOTES FOR ALL USER PREFERENCES)"
+            "… (as many as user’s liked categories)"
         {
           "id": "<INT: PHOTO ID>", 
+          "type": "photo",
           "category": "<STRING: CATEGORY NAME>",
-          "photo": "<STRING: PHOTO URL>",
-          "photographer": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
+          "source": "<STRING: PHOTO URL>",
+          "author": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
         },
-        "... (PHOTOS)"
+        {
+          "id": "<INT: PHOTO ID>", 
+          "type": "photo",
+          "category": "<STRING: CATEGORY NAME>",
+          "source": "<STRING: PHOTO URL>",
+          "author": "<STRING: PHOTOGRAPHER NAME> - Uploaded to Pexel Photos"
+        },
+      "..."
     ]
 }
 ```
 
 ### Add Category to User Preferences
-`POST` `/api/<int:user_id>/category/`
+`POST` `/api/<int:user_id>/category`
 ```json
 Request 
 
@@ -339,7 +363,7 @@ Response
 ```
 
 ### Remove Category from User Preferences
-`DELETE` `/api/<int:user_id>/category/`
+`DELETE` `/api/<int:user_id>/category`
 ```json
 Request 
 
@@ -392,8 +416,10 @@ Response
   "data": 
         {
           "category": "<STRING: QUOTE THEME>",
-          "quote": "<STRING: QUOTE>",
+          "type": "quote",
+          "source": "<STRING: QUOTE>",
           "author": "<STRING: AUTHOR>"
+
         }
 }
 ```
@@ -416,8 +442,10 @@ Response
   "data": 
         {
           "category": "<STRING: QUOTE THEME>",
-          "quote": "<STRING: QUOTE>",
+          "type": "quote",
+          "source": "<STRING: QUOTE>",
           "author": "<STRING: AUTHOR>"
+
         }
 }
 ```
@@ -425,6 +453,6 @@ Response
 # Extra Cool Stuff
 * Multithreading
    * Creates a Daemon Thread to automatically update the photos in the data table every hour
-   * This prevents causing the main thread to sleep during updates 
+   * This prevents causing the main thread to sleep and helps mitigate deadlocking during updating
 * mySQL server using Cloud SQL and Google Cloud Run to Deploy Containers
-* Sports an Authentication Proccess
+* Authentication and Encryption and HTTPS Secured
