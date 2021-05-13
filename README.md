@@ -279,7 +279,7 @@ Response
 }
 ```
 
-### Get Photos of Categories User Likes
+### Get Photos User Will Like
 `POST` `/api/data/<int:user_id>/`
 ```json
 Request 
@@ -391,7 +391,7 @@ Response
 }
 ```
 
-### Get Quote of Specific Category
+### Get Themed Quote
 `GET` `/api/quote/`
 ```json
 Request 
