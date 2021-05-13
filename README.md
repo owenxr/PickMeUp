@@ -118,7 +118,7 @@ Response
       {
           "id": "<INT: USER ID>",
 	  "name": "<STRING: USER NAME>",
-	  "email": "<STRING: EMAIL">,
+	  "email": "<STRING: EMAIL>",
           "session_token": "<STRING: SESSION TOKEN>", 
           "session_expiration": "<STRING: DATE-TIME>", 
           "update_token": "<STRING: UPDATE TOKEN>"
@@ -146,14 +146,14 @@ Response
 	{
        	    "id": "<INT: USER ID>",
 	    "name": "<STRING: USER NAME>",
-	    "email": "<STRING: EMAIL">,
-	    "categories": [ {
-	          {
+	    "email": "<STRING: EMAIL>",
+	    "categories": [
+	         {
 	         "id": "<INT: Category Id>",
 	         "category": "<STRING: Category name>"
 	         }
-	         ...
-	    } ]
+	         "..."
+	     ]
 
      }
 }
@@ -180,7 +180,7 @@ Response
       {
           "id": "<INT: USER ID>",
           "name": "<STRING: USER NAME>",
-	  "email": "<STRING: EMAIL">,
+	  "email": "<STRING: EMAIL>",
           "session_token": "<STRING: SESSION TOKEN>", 
           "session_expiration": "<STRING: DATE-TIME>", 
           "update_token": "<STRING: UPDATE TOKEN>"
@@ -207,7 +207,7 @@ Response
       {
           "Id": "<STRING: USER_ID>",
 	  "name": "<STRING: USER NAME>",
-	  "email": "<STRING: EMAIL">,
+	  "email": "<STRING: EMAIL>",
           "session_token": "<STRING: SESSION TOKEN>", 
           "session_expiration": "<STRING: DATE-TIME>", 
           "update_token": "<STRING: UPDATE TOKEN>"
@@ -301,7 +301,7 @@ Response
           "source": "<STRING: QUOTE STRING>",
           "author": "<STRING: AUTHOR NAME>"
         },
-            … (as many as user’s liked categories)
+            "… (as many as user’s liked categories)"
         {
           "id": "<INT: PHOTO ID>", 
           "type": "photo",
