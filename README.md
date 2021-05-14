@@ -100,6 +100,7 @@ Navigate to "src" and run `$ python3 app.py`
 * Relationship Database schema
     * Look at lines 11-14 in `db.py`
     * Used Many-to-Many association between Users and Categories they like
+    * Use One-to-Many relation between Categories and Data relating to it
 * [Deployment](#Deploy-link)
 
 # API Specifications 
