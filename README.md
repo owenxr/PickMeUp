@@ -9,8 +9,7 @@ The Feel Good App - Browse images you'll like and recieve quotes to brighten you
 ### VIDEO SUBMISSION: [Advertisement](https://www.youtube.com/watch?v=celL7_39VyU)
 
 ### Deploy Link
-Link: https://work-pvnxn5ufaq-uc.a.run.app/api/REQUEST/
-<br/> Fill In Request
+Link: No Longer in Service.
 
 # Features
 <img width="375" alt="Screen Shot 2021-05-13 at 12 30 12 AM" src="https://user-images.githubusercontent.com/67097401/118077657-87c6b880-b382-11eb-809b-405de1c28636.png">
