@@ -1,7 +1,7 @@
 # PickMeUp
 The Feel Good App - Browse images you'll like and recieve quotes to brighten your day. <br/>
 <br/>
-*Note that this app was built to be suitable for Google SQL (mySQL server) and Google Cloud Run (Container Deployment) ($300 credit free for 90 days)*
+*Note that this app was built to be suitable for Google SQL (mySQL server) and Google Cloud Run (Container Deployment)*
 <br/>
 <br/>
 ### ANDROID REPO: [GITHUB](https://github.com/nct33/PickMeUp)
